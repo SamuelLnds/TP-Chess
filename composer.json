@@ -1,0 +1,13 @@
+{
+    "name": "chess/chess",
+    "description": "Chess game in PHP - OOP exercise",
+    "type": "project",
+    "require": {
+        "php": ">=8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Chess\\": "src/"
+        }
+    }
+}
