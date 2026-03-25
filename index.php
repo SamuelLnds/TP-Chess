@@ -4,6 +4,7 @@ use Chess\Position;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Board;
+use Chess\Move;
 use Chess\Piece\Pawn;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -92,3 +93,18 @@ try {
 }
 
 #endregion
+
+echo "\n";
+
+#region Tests Move.php
+
+echo "\n$test_title_frame\n";
+echo "Test Move.php";
+echo "\n$test_title_frame\n";
+
+try {
+    $move = new Move(new Position(6, 4), new Position(5, 4));
+    echo "Move from " . $move->getFrom()->toKey() . " to " . $move->getTo()->toKey() . "\n"; // Move de 6:4 à 5:4
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
