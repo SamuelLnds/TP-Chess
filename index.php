@@ -4,6 +4,7 @@ use Chess\Position;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Board;
+use Chess\Factory\PieceFactory;
 use Chess\Move;
 use Chess\Piece\Pawn;
 use Chess\Piece\Knight;
@@ -116,15 +117,16 @@ try {
 echo "\n";
 
 #region Tests Board.php
+
 echo "\n$test_title_frame\n";
 echo "Test Board.php";
 echo "\n$test_title_frame\n";
 
 try {
     $board = new Board();
-    $board->placePiece(new Pawn(PieceColor::WHITE, new Position(6, 1))); 
+    $board->placePiece(new Pawn(PieceColor::WHITE, new Position(6, 1)));
     $board->placePiece(new Knight(PieceColor::BLACK, new Position(6, 2)));
-    $board->placePiece(new Pawn(PieceColor::BLACK, new Position(6, 3))); 
+    $board->placePiece(new Pawn(PieceColor::BLACK, new Position(6, 3)));
     $board->placePiece(new Rook(PieceColor::WHITE, new Position(6, 4)));
 
     echo "Pièces sur le plateau :\n";
@@ -132,6 +134,24 @@ try {
         [$row, $col] = array_map('intval', explode(':', $position));
         echo $piece->render() . " ({$row},{$col})\n";
     }
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+#endregion
+
+echo "\n";
+
+#region Tests PieceFactory.php
+
+echo "\n$test_title_frame\n";
+echo "Test PieceFactory.php";
+echo "\n$test_title_frame\n";
+
+try {
+    $factory = new PieceFactory();
+    $pawn = $factory->create(PieceType::PAWN, PieceColor::WHITE, new Position(6, 4));
+    echo "Création d'un " . $pawn->render() . " à la position " . $pawn->getPosition()->toKey() . "\n"; // Création d'un P à la position 6:4
 } catch (Exception $e) {
     echo $e->getMessage();
 }
