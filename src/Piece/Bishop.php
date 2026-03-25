@@ -34,5 +34,4 @@ class Bishop extends Piece
     }
 
     #endregion
-
 }

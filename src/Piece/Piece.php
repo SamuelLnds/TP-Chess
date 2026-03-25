@@ -5,6 +5,8 @@ namespace Chess\Piece;
 use Chess\Contract\Renderable;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
+use Chess\Exception\InvalidMoveException;
+use Chess\Exception\OccupiedByAllyException;
 use Chess\Position;
 use Chess\Board;
 
@@ -76,24 +78,16 @@ abstract class Piece implements Renderable
 
     public function canMove(Board $board, Position $target): bool
     {
-        // la pièce ne reste pas sur place
-        if ($this->getPosition()->equals($target)) {
-            return false;
+        if (!$this->isNotSameSquare($target) || !$this->isValidMovementShape($target)) {
+            throw new InvalidMoveException();
         }
 
-        // la forme du déplacement est valide
-        if (!$this->isValidMovementShape($target)) {
-            return false;
+        if ($this->isTargetOccupiedByAlly($board, $target)) {
+            throw new OccupiedByAllyException();
         }
 
-        // la case cible n'est pas occupée par un allié
-        if ($board->isAllyAt($target, $this->getColor())) {
-            return false;
-        }
-
-        // si la pièce n'est pas un cavalier, le chemin est libre
-        if (!$this instanceof Knight) {
-            return $board->isPathClear($this->getPosition(), $target);
+        if (!$this instanceof Knight && !$board->isPathClear($this->getPosition(), $target)) {
+            throw new InvalidMoveException();
         }
 
         return true;
@@ -116,6 +110,21 @@ abstract class Piece implements Renderable
     public function getDirection(): int
     {
         return $this->getColor() === PieceColor::WHITE ? -1 : 1;
+    }
+
+    #endregion
+
+    #region Méthodes de vérification
+
+    private function isNotSameSquare(Position $target): bool
+    {
+        return !$this->getPosition()->equals($target);
+    }
+
+    private function isTargetOccupiedByAlly(Board $board, Position $target): bool
+    {
+        $piece = $board->getPieceAt($target);
+        return $piece !== null && $piece->getColor() === $this->getColor();
     }
 
     #endregion

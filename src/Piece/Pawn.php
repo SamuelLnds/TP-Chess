@@ -40,7 +40,7 @@ class Pawn extends Piece
         }
 
         // Avance double au départ (2 cases)
-        if ($rowDiff === 2 * $direction && $colDiff === 0 && $currentRow === 1) {
+        if ($rowDiff === 2 * $direction && $colDiff === 0 && ($currentRow === 1 || $currentRow === 6)) {
             $return = true;
         }
 

@@ -6,6 +6,8 @@ use Chess\Enum\PieceType;
 use Chess\Board;
 use Chess\Move;
 use Chess\Piece\Pawn;
+use Chess\Piece\Knight;
+use Chess\Piece\Rook;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -104,7 +106,34 @@ echo "\n$test_title_frame\n";
 
 try {
     $move = new Move(new Position(6, 4), new Position(5, 4));
-    echo "Move from " . $move->getFrom()->toKey() . " to " . $move->getTo()->toKey() . "\n"; // Move de 6:4 à 5:4
+    echo "Move from " . $move->getFrom()->toKey() . " to " . $move->getTo()->toKey(); // Move de 6:4 à 5:4
 } catch (Exception $e) {
     echo $e->getMessage();
 }
+
+#endregion
+
+echo "\n";
+
+#region Tests Board.php
+echo "\n$test_title_frame\n";
+echo "Test Board.php";
+echo "\n$test_title_frame\n";
+
+try {
+    $board = new Board();
+    $board->placePiece(new Pawn(PieceColor::WHITE, new Position(6, 1))); 
+    $board->placePiece(new Knight(PieceColor::BLACK, new Position(6, 2)));
+    $board->placePiece(new Pawn(PieceColor::BLACK, new Position(6, 3))); 
+    $board->placePiece(new Rook(PieceColor::WHITE, new Position(6, 4)));
+
+    echo "Pièces sur le plateau :\n";
+    foreach ($board->getPieces() as $position => $piece) {
+        [$row, $col] = array_map('intval', explode(':', $position));
+        echo $piece->render() . " ({$row},{$col})\n";
+    }
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+#endregion
