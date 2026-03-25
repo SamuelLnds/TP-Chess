@@ -30,11 +30,6 @@ class Position
         return $this->row;
     }
 
-    public function getColumn(): int
-    {
-        return $this->column;
-    }
-
     public function setRow(int $row): void
     {
         if ($row < 0 || $row > 7) {
@@ -42,6 +37,11 @@ class Position
         }
 
         $this->row = $row;
+    }
+
+    public function getColumn(): int
+    {
+        return $this->column;
     }
 
     public function setColumn(int $column): void
@@ -55,7 +55,7 @@ class Position
 
     #endregion
 
-    #region Méthodes d'objet
+    #region Méthodes d'instance
 
     public function equals(Position $other): bool
     {

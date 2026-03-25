@@ -3,6 +3,8 @@
 use Chess\Position;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
+use Chess\Board;
+use Chess\Piece\Pawn;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -58,6 +60,33 @@ try {
     foreach (array_reverse(PieceType::cases()) as $type) {
         echo "Type : " . $type->name . "\n"; // PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
     }
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+#endregion
+
+echo "\n";
+
+#region Tests Piece.php
+
+echo "\n$test_title_frame\n";
+echo "Test Piece.php";
+echo "\n$test_title_frame\n";
+
+try {
+    $board = new Board();
+    $pawn = new Pawn(PieceColor::WHITE, new Position(6, 4));
+
+    echo "Type : " . $pawn->getType()->name . "\n"; // PAWN
+    echo "Couleur : " . $pawn->getColor()->name . "\n"; // WHITE
+    echo "Direction : " . $pawn->getDirection() . "\n"; // -1
+
+    $moveOk = $pawn->canMove($board, new Position(5, 4));
+    echo "Déplacement (6,4 -> 5,4) : " . ($moveOk ? 'OK' : 'KO') . "\n"; // OK
+
+    $moveKo = $pawn->canMove($board, new Position(6, 4));
+    echo "Déplacement (6,4 -> 6,4) : " . ($moveKo ? 'OK' : 'KO') . "\n"; // KO
 } catch (Exception $e) {
     echo $e->getMessage();
 }
