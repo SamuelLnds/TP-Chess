@@ -1,6 +1,6 @@
 {
     "name": "chess/chess",
-    "description": "Chess game in PHP - OOP exercise",
+    "description": "TP échecs",
     "type": "project",
     "require": {
         "php": ">=8.1"
@@ -9,5 +9,26 @@
         "psr-4": {
             "Chess\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "phpstan/extension-installer": "^1.4",
+        "slevomat/coding-standard": "^8.28",
+        "squizlabs/php_codesniffer": "^4.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "lint:phpstan": "phpstan analyse -c tools/quality/phpstan.neon",
+        "lint:phpcs": "phpcs --standard=tools/quality/phpcs.xml",
+        "lint:fix": "phpcbf --standard=tools/quality/phpcs.xml",
+        "lint": [
+            "@lint:phpstan",
+            "@lint:phpcs"
+        ]
     }
 }
