@@ -33,17 +33,17 @@ class Pawn extends Piece
         }
 
         $return = false;
-        
+
         // Avance simple (1 case)
         if ($rowDiff === $direction && $colDiff === 0) {
             $return = true;
-            }
+        }
 
             // Avance double au départ (2 cases)
-            if ($rowDiff === 2 * $direction && $colDiff === 0 && ($currentRow === 1 || $currentRow === 6)) {
-                $return = true;
+        if ($rowDiff === 2 * $direction && $colDiff === 0 && ($currentRow === 1 || $currentRow === 6)) {
+            $return = true;
         }
-        
+
         // Capture en diagonale (1 case diagonale)
         // Coldiff 1 ou -1 donc absolu
         if ($rowDiff === $direction && abs($colDiff) === 1) {

@@ -57,7 +57,7 @@ class Board implements Renderable
         if (!$piece->canMove($this, $to)) {
             throw new InvalidMoveException();
         }
-        
+
         $this->removePieceAt($from);
         $piece->setPosition($to);
         $this->placePiece($piece);
@@ -116,8 +116,8 @@ class Board implements Renderable
     }
 
     // récupère les pièces d'une certaine couleur
-        /**
-     * @return array<string, Piece>  clé "row:col" => pièce
+    /**
+     * @return list<Piece>
      */
     public function getPiecesFromColor(PieceColor $color): array
     {

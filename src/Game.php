@@ -31,11 +31,11 @@ class Game
         // appeler la factory pour créer les pièces
         $this->pieceFactory = new PieceFactory();
     }
-        
+
     #endregion
-    
+
     #region Méthodes
-        
+
     public function start(): void
     {
         // placer les pièces au démarrage
@@ -88,20 +88,22 @@ class Game
     {
         // retrouver la position du roi de la couleur demandée
         $king_position = $this->board->getKingPosition($color);
+
+        if ($king_position == null) {
+            throw new NoPieceException("Le roi de la couleur " . $color->name . " est introuvable sur le plateau.");
+        }
+
         // récupérer toutes les pièces adverses
         $opponent_pieces = $this->board->getPiecesFromColor($color->opposite());
         // tester si l'une d'elles peut atteindre la case du roi
-        foreach ($opponent_pieces as $piece)
-        {
-            try
-            {
+        foreach ($opponent_pieces as $piece) {
+            try {
                 // retourner true dès qu'une menace existe
                 if ($piece->canMove($this->board, $king_position)) {
                     return true;
                 }
-            }
-            catch (InvalidMoveException $e)
-            {
+            } catch (InvalidMoveException $e) {
+                // une exception signifie juste que le déplacement est impossible
                 continue;
             }
         }

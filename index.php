@@ -13,7 +13,6 @@ use Chess\Piece\Rook;
 use Chess\Piece\Queen;
 use Chess\Piece\King;
 use Chess\Game;
-use Chess\Piece\Piece;
 
 require_once __DIR__ . '/vendor/autoload.php';
 

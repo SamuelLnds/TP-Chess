@@ -85,8 +85,7 @@ abstract class Piece implements Renderable
         if ($this->isTargetOccupiedByAlly($board, $target)) {
             // lever OccupiedByAllyException si nécessaire
             throw new OccupiedByAllyException();
-        }
-        elseif ($board->hasPieceAt($target)) {
+        } elseif ($board->hasPieceAt($target)) {
             return $this->canCapture($board, $target);
         }
 
