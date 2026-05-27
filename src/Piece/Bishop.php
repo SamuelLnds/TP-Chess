@@ -26,7 +26,7 @@ class Bishop extends Piece
         $colDiff = $target->getColumn() - $this->getPosition()->getColumn();
 
         // Fou en diagonale
-        if ($rowDiff !== 0 && $colDiff !== 0 && $rowDiff === $colDiff) {
+        if ($rowDiff !== 0 && $colDiff !== 0 && abs($rowDiff) === abs($colDiff)) {
             return true;
         }
 

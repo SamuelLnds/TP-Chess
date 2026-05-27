@@ -7,6 +7,7 @@ use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Exception\InvalidMoveException;
 use Chess\Exception\OccupiedByAllyException;
+use Chess\Exception\ChessException;
 use Chess\Position;
 use Chess\Board;
 
@@ -85,12 +86,23 @@ abstract class Piece implements Renderable
         if ($this->isTargetOccupiedByAlly($board, $target)) {
             // lever OccupiedByAllyException si nécessaire
             throw new OccupiedByAllyException();
-        } elseif ($board->hasPieceAt($target)) {
-            return $this->canCapture($board, $target);
+        }
+
+        // Un pion ne peut se déplacer en diagonale que pour capturer
+        if ($this instanceof Pawn && $this->getPosition()->getColumn() !== $target->getColumn() && !$board->hasPieceAt($target)) {
+            throw new InvalidMoveException();
         }
 
         if (!$this instanceof Knight && !$board->isPathClear($this->getPosition(), $target)) {
             throw new InvalidMoveException();
+        }
+
+        if ($board->hasPieceAt($target)) {
+            // également prendre en compte le chemin obstrué en cas de capture
+            if (!$this instanceof Knight && !$board->isPathClear($this->getPosition(), $target)) {
+                throw new InvalidMoveException();
+            }
+            return $this->canCapture($board, $target);
         }
 
         return true;

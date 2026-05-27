@@ -59,6 +59,7 @@ class Board implements Renderable
         }
 
         $this->removePieceAt($from);
+        $this->removePieceAt($to); // capture éventuelle
         $piece->setPosition($to);
         $this->placePiece($piece);
     }

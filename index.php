@@ -4,6 +4,7 @@ use Chess\Position;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Board;
+use Chess\Exception\ChessException;
 use Chess\Factory\PieceFactory;
 use Chess\Move;
 use Chess\Piece\Pawn;
@@ -229,9 +230,13 @@ try {
     testMove($game, new Move(new Position(3, 4), new Position(4, 3))); // bonne tentative de capture
     testMove($game, new Move(new Position(4, 4), new Position(3, 4))); // déplacement du pion blanc autorisé
     testMove($game, new Move(new Position(3, 4), new Position(2, 4))); // déplacement du pion blanc interdit
-    testMove($game, new Move(new Position(4,3), new Position(5, 3))); // déplacement du pion noir autorisé
+    testMove($game, new Move(new Position(4, 3), new Position(5, 3))); // déplacement du pion noir autorisé
     testMove($game, new Move(new Position(3, 4), new Position(2, 4))); // déplacement du pion blanc autorisé
-    testMove($game, new Move(new Position(5,3), new Position(6, 3))); // déplacement du pion noir autorisé
+    testMove($game, new Move(new Position(5, 3), new Position(6, 3))); // déplacement du pion noir autorisé
+    testMove($game, new Move(new Position(7, 4), new Position(6, 3))); // déplacement du pion blanc interdit car mise en échec
+    testMove($game, new Move(new Position(0, 3), new Position(3, 6))); // reine met en échec à nouveau
+    testMove($game, new Move(new Position(6, 5), new Position(5, 5))); // pion essaye de protèger le roi en échec
+    testMove($game, new Move(new Position(6, 5), new Position(4, 5))); // pion protège vraiment le roi en échec
 } catch (Exception $e) {
     echo $e->getMessage();
 }
@@ -246,7 +251,7 @@ function testMove(Game $game, Move $move): void
             echo "Échec au roi " . $game->getCurrentPlayer()->name . " !\n\n";
         }
         echo $game->getBoard()->render();
-    } catch (Exception $e) {
+    } catch (ChessException $e) {
         echo "Erreur lors du déplacement de " . $move->getFrom()->keyChessNotation() . " à " . $move->getTo()->keyChessNotation() . " : " . $e->getMessage() . "\n\n";
     }
 }

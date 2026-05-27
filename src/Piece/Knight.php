@@ -26,7 +26,7 @@ class Knight extends Piece
         $colDiff = $target->getColumn() - $this->getPosition()->getColumn();
 
         // Cavalier en L
-        if (($rowDiff === 2 && $colDiff === 1) || ($rowDiff === 1 && $colDiff === 2)) {
+        if ((abs($rowDiff) === 2 && abs($colDiff) === 1) || (abs($rowDiff) === 1 && abs($colDiff) === 2)) {
             return true;
         }
 

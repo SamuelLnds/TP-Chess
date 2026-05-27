@@ -29,7 +29,7 @@ class Queen extends Piece
         if (
             ($rowDiff === 0 && $colDiff !== 0) ||
             ($rowDiff !== 0 && $colDiff === 0) ||
-            ($rowDiff !== 0 && $colDiff !== 0 && $rowDiff === $colDiff)
+            (abs($rowDiff) !== 0 && $colDiff !== 0 && abs($rowDiff) === abs($colDiff))
         ) {
             return true;
         }

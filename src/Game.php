@@ -4,6 +4,7 @@ namespace Chess;
 
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
+use Chess\Exception\ChessException;
 use Chess\Exception\InvalidMoveException;
 use Chess\Exception\NoPieceException;
 use Chess\Exception\WrongTurnException;
@@ -80,6 +81,18 @@ class Game
         // déplacer la pièce
         $this->board->movePiece($move->getFrom(), $move->getTo());
 
+        // rollback le déplacement si mise en échec
+        if ($this->isCheck(($this->currentPlayer))) {
+
+            // movePiece possède des règles internes et ne peut pas être réutilisé
+            // donc on fait manuellement
+            $this->board->removePieceAt($move->getTo());
+            $piece->setPosition($move->getFrom());
+            $this->board->placePiece($piece);
+
+            throw new InvalidMoveException("Ce déplacement met votre roi en échec.");
+        }
+
         // changer le joueur courant
         $this->switchPlayer();
     }
@@ -100,9 +113,10 @@ class Game
             try {
                 // retourner true dès qu'une menace existe
                 if ($piece->canMove($this->board, $king_position)) {
+                    echo "Le roi de couleur " . $color->name . " est en échec par " . $piece->render() . " en " . $piece->getPosition()->toKey() . "\n";
                     return true;
                 }
-            } catch (InvalidMoveException $e) {
+            } catch (ChessException $e) {
                 // une exception signifie juste que le déplacement est impossible
                 continue;
             }
