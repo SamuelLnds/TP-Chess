@@ -75,7 +75,7 @@ class Position
         // doit retourner une chaîne du type "e2"
         $columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
         // getRow +1 pour ne pas partir du 0 de l'array
-        return $columns[$this->getColumn()] . ($this->getRow() + 1);
+        return $columns[$this->getColumn()] . (8 - $this->getRow());
     }
 
     #endregion

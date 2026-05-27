@@ -19,7 +19,7 @@ class Knight extends Piece
 
     #region Overrides
 
-    public function isValidMovementShape(Position $target): bool
+    protected function isValidMovementShape(Position $target): bool
     {
         // Récupération des informations nécessaires à la vérif
         $rowDiff = $target->getRow() - $this->getPosition()->getRow();

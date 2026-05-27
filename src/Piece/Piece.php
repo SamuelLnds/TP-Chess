@@ -7,7 +7,6 @@ use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Exception\InvalidMoveException;
 use Chess\Exception\OccupiedByAllyException;
-use Chess\Exception\ChessException;
 use Chess\Position;
 use Chess\Board;
 
@@ -18,6 +17,7 @@ abstract class Piece implements Renderable
     protected PieceColor $color;
     protected Position $position;
     protected PieceType $type;
+    private bool $hasMoved = false;
 
     #endregion
 
@@ -54,6 +54,16 @@ abstract class Piece implements Renderable
         return $this->type;
     }
 
+    public function hasMoved(): bool
+    {
+        return $this->hasMoved;
+    }
+
+    public function markAsMoved(): void
+    {
+        $this->hasMoved = true;
+    }
+
     #endregion
 
     #region Méthodes
@@ -88,8 +98,13 @@ abstract class Piece implements Renderable
             throw new OccupiedByAllyException();
         }
 
-        // Un pion ne peut se déplacer en diagonale que pour capturer
-        if ($this instanceof Pawn && $this->getPosition()->getColumn() !== $target->getColumn() && !$board->hasPieceAt($target)) {
+        // Un pion ne peut se déplacer en diagonale que pour capturer (sauf prise en passant)
+        $enPassantTarget = $board->getEnPassantTarget();
+        $isPawnDiagonalEmpty = $this instanceof Pawn
+            && $this->getPosition()->getColumn() !== $target->getColumn()
+            && !$board->hasPieceAt($target)
+            && ($enPassantTarget === null || !$target->equals($enPassantTarget));
+        if ($isPawnDiagonalEmpty) {
             throw new InvalidMoveException();
         }
 
@@ -97,12 +112,8 @@ abstract class Piece implements Renderable
             throw new InvalidMoveException();
         }
 
-        if ($board->hasPieceAt($target)) {
-            // également prendre en compte le chemin obstrué en cas de capture
-            if (!$this instanceof Knight && !$board->isPathClear($this->getPosition(), $target)) {
-                throw new InvalidMoveException();
-            }
-            return $this->canCapture($board, $target);
+        if ($board->hasPieceAt($target) && !$this->canCapture($board, $target)) {
+            throw new InvalidMoveException();
         }
 
         return true;

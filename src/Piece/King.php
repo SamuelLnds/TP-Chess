@@ -19,14 +19,18 @@ class King extends Piece
 
     #region Overrides
 
-    public function isValidMovementShape(Position $target): bool
+    protected function isValidMovementShape(Position $target): bool
     {
-        // Récupération des informations nécessaires à la vérif
         $rowDiff = abs($target->getRow() - $this->getPosition()->getRow());
         $colDiff = abs($target->getColumn() - $this->getPosition()->getColumn());
 
         // Roi en 1 case dans n'importe quelle direction
         if ($rowDiff <= 1 && $colDiff <= 1) {
+            return true;
+        }
+
+        // Roque — conditions supplémentaires vérifiées dans Game
+        if ($rowDiff === 0 && $colDiff === 2 && !$this->hasMoved()) {
             return true;
         }
 

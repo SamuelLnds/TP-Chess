@@ -19,7 +19,7 @@ class Pawn extends Piece
 
     #region Overrides
 
-    public function isValidMovementShape(Position $target): bool
+    protected function isValidMovementShape(Position $target): bool
     {
         // Récupération des informations nécessaires à la vérif
         $direction = $this->getDirection();
@@ -28,7 +28,7 @@ class Pawn extends Piece
         $currentRow = $this->getPosition()->getRow();
 
         // Vérifier la direction, si impossible alors retour immédiat
-        if ($rowDiff != $direction && $rowDiff != 2 * $direction) {
+        if ($rowDiff !== $direction && $rowDiff !== 2 * $direction) {
             return false;
         }
 

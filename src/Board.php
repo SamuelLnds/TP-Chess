@@ -6,7 +6,6 @@ use Chess\Contract\Renderable;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Exception\NoPieceException;
-use Chess\Exception\InvalidMoveException;
 use Chess\Piece\Piece;
 
 class Board implements Renderable
@@ -17,9 +16,21 @@ class Board implements Renderable
     /** @var array<string, Piece> */
     private array $pieces = [];
 
+    private ?Position $enPassantTarget = null;
+
     #endregion
 
     #region Méthodes
+
+    public function getEnPassantTarget(): ?Position
+    {
+        return $this->enPassantTarget;
+    }
+
+    public function setEnPassantTarget(?Position $target): void
+    {
+        $this->enPassantTarget = $target;
+    }
 
     // pose ou remplace une pièce sur la case
     public function placePiece(Piece $piece): void
@@ -52,10 +63,6 @@ class Board implements Renderable
 
         if ($piece === null) {
             throw new NoPieceException();
-        }
-
-        if (!$piece->canMove($this, $to)) {
-            throw new InvalidMoveException();
         }
 
         $this->removePieceAt($from);
@@ -169,14 +176,14 @@ class Board implements Renderable
         }
 
         // construit tout le tableau contenant les lignes et les numéros de ligne/colonne
-        $rowNumbers = range(1, 8);
+        $rowNumbers = range(8, 1);
         $colLetters = range('a', 'h');
         $colWidth = 4;
 
         $board = str_repeat(' ', $colWidth) . implode(' ', $colLetters) . "\n"; // en-tête des colonnes
         $board .= '  ┌' . str_repeat('─', count($rowNumbers) * 2 + 1) . '┐' . "\n"; // séparateur
         foreach ($lines as $index => $line) {
-            $board .= $rowNumbers[$index] . ' │ ' . $line . ' │ ' . $rowNumbers[$index] . "\n"; // numéro de ligne + contenu de la ligne
+            $board .= $rowNumbers[$index] . ' │ ' . $line . ' │ ' . $rowNumbers[$index] . "\n";
         }
         $board .= '  └' . str_repeat('─', count($rowNumbers) * 2 + 1) . '┘' . "\n"; // séparateur
         $board .= str_repeat(' ', $colWidth) . implode(' ', $colLetters) . "\n"; // en-tête des colonnes

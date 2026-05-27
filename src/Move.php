@@ -2,6 +2,8 @@
 
 namespace Chess;
 
+use Chess\Enum\PieceType;
+
 // Représente un déplacement sans validation
 class Move
 {
@@ -9,15 +11,17 @@ class Move
 
     private Position $from;
     private Position $to;
+    private ?PieceType $promotionChoice;
 
     #endregion
 
     #region Constructeur
 
-    public function __construct(Position $from, Position $to)
+    public function __construct(Position $from, Position $to, ?PieceType $promotionChoice = null)
     {
         $this->from = $from;
         $this->to = $to;
+        $this->promotionChoice = $promotionChoice;
     }
 
     #endregion
@@ -32,6 +36,11 @@ class Move
     public function getTo(): Position
     {
         return $this->to;
+    }
+
+    public function getPromotionChoice(): ?PieceType
+    {
+        return $this->promotionChoice;
     }
 
     #endregion
