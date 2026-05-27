@@ -6,6 +6,7 @@ use Chess\Contract\Renderable;
 use Chess\Enum\PieceColor;
 use Chess\Enum\PieceType;
 use Chess\Exception\NoPieceException;
+use Chess\Exception\InvalidMoveException;
 use Chess\Piece\Piece;
 
 class Board implements Renderable
@@ -53,6 +54,10 @@ class Board implements Renderable
             throw new NoPieceException();
         }
 
+        if (!$piece->canMove($this, $to)) {
+            throw new InvalidMoveException();
+        }
+        
         $this->removePieceAt($from);
         $piece->setPosition($to);
         $this->placePiece($piece);
@@ -110,6 +115,24 @@ class Board implements Renderable
         return $this->pieces;
     }
 
+    // récupère les pièces d'une certaine couleur
+        /**
+     * @return array<string, Piece>  clé "row:col" => pièce
+     */
+    public function getPiecesFromColor(PieceColor $color): array
+    {
+        // initialisation du tableau
+        $piecesOfColor = [];
+        // toutes les pièces
+        foreach ($this->getPieces() as $piece) {
+            if ($piece->getColor() === $color) {
+                array_push($piecesOfColor, $piece);
+            }
+        }
+
+        return $piecesOfColor;
+    }
+
     public function getKingPosition(PieceColor $color): ?Position
     {
         foreach ($this->getPieces() as $piece) {
@@ -127,7 +150,38 @@ class Board implements Renderable
     // doit retourner une représentation texte du plateau
     public function render(): string
     {
-        return '';
+        $lines = [];
+
+        // parcourt toutes les lignes
+        for ($row = 0; $row < 8; $row++) {
+            $cells = [];
+
+            // parcourt toutes les colonnes
+            for ($col = 0; $col < 8; $col++) {
+                // récupère la pièce à la position courante
+                $piece = $this->getPieceAt(new Position($row, $col));
+                $cells[] = $piece ? $piece->render() : '.';
+            }
+
+            // ajoute la ligne au tableau de lignes
+            $lines[] = implode(' ', $cells);
+        }
+
+        // construit tout le tableau contenant les lignes et les numéros de ligne/colonne
+        $rowNumbers = range(1, 8);
+        $colLetters = range('a', 'h');
+        $colWidth = 4;
+
+        $board = str_repeat(' ', $colWidth) . implode(' ', $colLetters) . "\n"; // en-tête des colonnes
+        $board .= '  ┌' . str_repeat('─', count($rowNumbers) * 2 + 1) . '┐' . "\n"; // séparateur
+        foreach ($lines as $index => $line) {
+            $board .= $rowNumbers[$index] . ' │ ' . $line . ' │ ' . $rowNumbers[$index] . "\n"; // numéro de ligne + contenu de la ligne
+        }
+        $board .= '  └' . str_repeat('─', count($rowNumbers) * 2 + 1) . '┘' . "\n"; // séparateur
+        $board .= str_repeat(' ', $colWidth) . implode(' ', $colLetters) . "\n"; // en-tête des colonnes
+
+        // PHP_EOL est utilisé ici comme séparateur pour un bon retour à la ligne
+        return $board . PHP_EOL;
     }
 
     #endregion

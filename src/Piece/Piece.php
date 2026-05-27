@@ -83,7 +83,11 @@ abstract class Piece implements Renderable
         }
 
         if ($this->isTargetOccupiedByAlly($board, $target)) {
+            // lever OccupiedByAllyException si nécessaire
             throw new OccupiedByAllyException();
+        }
+        elseif ($board->hasPieceAt($target)) {
+            return $this->canCapture($board, $target);
         }
 
         if (!$this instanceof Knight && !$board->isPathClear($this->getPosition(), $target)) {
@@ -98,6 +102,11 @@ abstract class Piece implements Renderable
         // il doit y avoir une pièce ennemie à capturer sur la case cible
         $targetPiece = $board->getPieceAt($target);
         if ($targetPiece === null || $targetPiece->getColor() === $this->getColor()) {
+            return false;
+        }
+
+        // tout droit est un mouvement valide pour un pion mais pas pour une capture
+        if ($this instanceof Pawn && $this->getPosition()->getColumn() === $target->getColumn()) {
             return false;
         }
 

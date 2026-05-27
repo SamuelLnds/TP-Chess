@@ -8,7 +8,12 @@ use Chess\Factory\PieceFactory;
 use Chess\Move;
 use Chess\Piece\Pawn;
 use Chess\Piece\Knight;
+use Chess\Piece\Bishop;
 use Chess\Piece\Rook;
+use Chess\Piece\Queen;
+use Chess\Piece\King;
+use Chess\Game;
+use Chess\Piece\Piece;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -151,9 +156,100 @@ echo "\n$test_title_frame\n";
 try {
     $factory = new PieceFactory();
     $pawn = $factory->create(PieceType::PAWN, PieceColor::WHITE, new Position(6, 4));
-    echo "Création d'un " . $pawn->render() . " à la position " . $pawn->getPosition()->toKey() . "\n"; // Création d'un P à la position 6:4
+    echo "Création d'un " . $pawn->render() . " à la position " . $pawn->getPosition()->toKey(); // Création d'un P à la position 6:4
 } catch (Exception $e) {
     echo $e->getMessage();
+}
+
+#endregion
+
+echo "\n";
+
+#region Tests représentation visuelle du plateau
+
+echo "\n$test_title_frame\n";
+echo "Test représentation visuelle du plateau";
+echo "\n$test_title_frame\n";
+
+try {
+    $board = new Board();
+    $board->placePiece(new Rook(PieceColor::WHITE, new Position(7, 0)));
+    $board->placePiece(new Knight(PieceColor::WHITE, new Position(7, 1)));
+    $board->placePiece(new Bishop(PieceColor::WHITE, new Position(7, 2)));
+    $board->placePiece(new Queen(PieceColor::WHITE, new Position(7, 3)));
+    $board->placePiece(new King(PieceColor::WHITE, new Position(7, 4)));
+    $board->placePiece(new Bishop(PieceColor::WHITE, new Position(7, 5)));
+    $board->placePiece(new Knight(PieceColor::WHITE, new Position(7, 6)));
+    $board->placePiece(new Rook(PieceColor::WHITE, new Position(7, 7)));
+
+    $board->placePiece(new Rook(PieceColor::BLACK, new Position(0, 0)));
+    $board->placePiece(new Knight(PieceColor::BLACK, new Position(0, 1)));
+    $board->placePiece(new Bishop(PieceColor::BLACK, new Position(0, 2)));
+    $board->placePiece(new Queen(PieceColor::BLACK, new Position(0, 3)));
+    $board->placePiece(new King(PieceColor::BLACK, new Position(0, 4)));
+    $board->placePiece(new Bishop(PieceColor::BLACK, new Position(0, 5)));
+    $board->placePiece(new Knight(PieceColor::BLACK, new Position(0, 6)));
+    $board->placePiece(new Rook(PieceColor::BLACK, new Position(0, 7)));
+
+    for ($col = 0; $col < 8; $col++) {
+        $board->placePiece(new Pawn(PieceColor::WHITE, new Position(6, $col)));
+        $board->placePiece(new Pawn(PieceColor::BLACK, new Position(1, $col)));
+    }
+
+    echo "Plateau de jeu :\n\n";
+    echo $board->render();
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+#endregion
+
+echo "\n";
+
+#region Zone de test de jeu
+
+echo "\n$test_title_frame\n";
+echo "Zone de test de jeu";
+echo "\n$test_title_frame\n";
+
+try {
+    $game = new Game();
+    
+    // Début de partie
+    echo "Démarrage de la partie...\n\n";
+    $game->start();
+    echo $game->getBoard()->render();
+    echo "Le joueur " . $game->getCurrentPlayer()->name . " commence.\n";
+
+    // simulation d'un faux déplacement
+    testMove($game, new Move(new Position(6, 4), new Position(0, 4))); // déplacement du pion blanc interdit
+    testMove($game, new Move(new Position(6, 4), new Position(4, 4))); // déplacement du pion blanc autorisé
+    testMove($game, new Move(new Position(1, 4), new Position(3, 4))); // déplacement du pion noir autorisé
+    testMove($game, new Move(new Position(4, 4), new Position(3, 4))); // mauvaise tentative de capture
+    testMove($game, new Move(new Position(6, 3), new Position(4, 3))); // déplacement du pion blanc autorisé
+    testMove($game, new Move(new Position(3, 4), new Position(4, 3))); // bonne tentative de capture
+    testMove($game, new Move(new Position(4, 4), new Position(3, 4))); // déplacement du pion blanc autorisé
+    testMove($game, new Move(new Position(3, 4), new Position(2, 4))); // déplacement du pion blanc interdit
+    testMove($game, new Move(new Position(4,3), new Position(5, 3))); // déplacement du pion noir autorisé
+    testMove($game, new Move(new Position(3, 4), new Position(2, 4))); // déplacement du pion blanc autorisé
+    testMove($game, new Move(new Position(5,3), new Position(6, 3))); // déplacement du pion noir autorisé
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
+
+function testMove(Game $game, Move $move): void
+{
+    try {
+        echo "Déplacement de " . $move->getFrom()->keyChessNotation() . " à " . $move->getTo()->keyChessNotation() . ".\n\n";
+        $game->play($move);
+        if ($game->isCheck($game->getCurrentPlayer()))
+        {
+            echo "Échec au roi " . $game->getCurrentPlayer()->name . " !\n\n";
+        }
+        echo $game->getBoard()->render();
+    } catch (Exception $e) {
+        echo "Erreur lors du déplacement de " . $move->getFrom()->keyChessNotation() . " à " . $move->getTo()->keyChessNotation() . " : " . $e->getMessage() . "\n\n";
+    }
 }
 
 #endregion

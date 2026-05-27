@@ -69,6 +69,15 @@ class Position
         return implode(':', [$this->getRow(), $this->getColumn()]);
     }
 
+    // retour avec notation algébrique plutôt que celle programmée
+    public function keyChessNotation(): string
+    {
+        // doit retourner une chaîne du type "e2"
+        $columns = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        // getRow +1 pour ne pas partir du 0 de l'array
+        return $columns[$this->getColumn()] . ($this->getRow() + 1);
+    }
+
     #endregion
 
     #region Méthodes statiques
