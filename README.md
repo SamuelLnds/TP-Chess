@@ -16,13 +16,13 @@ Lancer les tests :
 composer test
 ```
 
-Executer index.php :
+Exécuter index.php :
 
 ```bash
 php index.php
 ```
 
-Executer play.php (hors cadre) :
+Exécuter play.php (hors cadre) :
 
 ```bash
 php play.php
@@ -73,7 +73,7 @@ composer lint:fix
 - ✅ `setupPieces()`
 - ✅ `switchPlayer()`
 
-## Pieces
+## Pièces
 
 - ✅ `Piece`
 - ✅ `__construct()`
@@ -132,9 +132,9 @@ composer lint:fix
 - ✅ Roque
 - ✅ Promotion du pion
 - ✅ Prise en passant
-- ✅ Interdiction de mettre son propre roi en echec
-- ✅ Echec et mat
+- ✅ Interdiction de mettre son propre roi en échec
+- ✅ Échec et mat
 - ✅ Pat
 - ❌ Historique complet des coups
-- ✅ Tests automatises
-- ❌ Autre bonus : a preciser
+- ✅ Tests automatisés
+- ❌ Autre bonus : à préciser
