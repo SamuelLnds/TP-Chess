@@ -10,7 +10,13 @@
             "Chess\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Chess\\Tests\\": "tests/"
+        }
+    },
     "require-dev": {
+        "phpunit/phpunit": "^10.5",
         "phpstan/phpstan": "^2.1",
         "phpstan/extension-installer": "^1.4",
         "slevomat/coding-standard": "^8.28",
@@ -23,6 +29,7 @@
         }
     },
     "scripts": {
+        "test": "vendor/bin/phpunit --testdox",
         "lint:phpstan": "phpstan analyse -c tools/quality/phpstan.neon",
         "lint:phpcs": "phpcs --standard=tools/quality/phpcs.xml",
         "lint:fix": "phpcbf --standard=tools/quality/phpcs.xml",
