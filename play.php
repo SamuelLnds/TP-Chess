@@ -1,5 +1,10 @@
 <?php
 
+// Rendering de board différent de la classe parce que je voulais quelque chose de plus esthétique et celui-ci est généré par IA
+// Idem pour le changement de l'apparence des pièces
+// play.php ne rentre pas dans le cadre du TP mais était surtout une expérience pour manipuler davantage,
+// expliquant la volonté de séparer une partie de la logique afin de ne pas entacher le travail qui a été réalisé
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -39,6 +44,7 @@ const PIECES = [
 
 #region Affichage
 
+// 
 function renderBoard(Board $board): void
 {
     $cols = DIM . '      a  b  c  d  e  f  g  h' . RESET;
